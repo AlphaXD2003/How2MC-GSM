@@ -1,0 +1,49 @@
+
+
+services:
+  backend:
+    build: 
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - '5000:5000'
+      
+    volumes:
+      - ./backend:/server
+    environment:
+      - MONGODB_URI=mongodb://mongo:27017
+    depends_on:
+      - mongo
+    networks:
+      - my-ptero-client  
+  
+  frontend:
+    build:
+      context: ./frontend/client
+      dockerfile: Dockerfile
+    ports:
+      - '5173:5173'
+      - '80:80'
+    volumes:
+      - ./frontend/client:/app
+    environment:
+      - VITE_BACKEND_URL=https://backend:5000
+    depends_on:
+      - backend
+    networks:
+      - my-ptero-client  
+  
+  mongo:
+    image: mongo:latest
+    ports:
+      - '27017:27017'
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - my-ptero-client  
+
+volumes:
+  mongo-data:
+
+networks:
+  my-ptero-client:

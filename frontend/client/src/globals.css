@@ -1,0 +1,88 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@100..900&display=swap");
+@import 'react-toastify/dist/ReactToastify.css';
+@import 'font-awesome/css/font-awesome.min.css';
+
+:root {
+  --primary-color: #000;
+  --secondary-color: #ffcc00;
+  --tertiary-color: #6600cc;
+  --quaternary-color: #cc0000;
+  --quinary-color: #19273b;
+  --text-color: #0060fe;
+  --semi-dark: #9193a8;
+  --semi-dark2: #4b556345;
+  --card-bg: #111827;
+  --button-color: #3f70db;
+  --background: 222.2 84% 4.9%;
+}
+
+.roboto-slab-900 {
+  font-family: "Roboto Slab", serif;
+  font-optical-sizing: auto;
+  font-weight: 900;
+  font-style: normal;
+}
+
+.roboto-slab-600 {
+  font-family: "Roboto Slab", serif;
+  font-optical-sizing: auto;
+  font-weight: 600;
+  font-style: normal;
+}
+
+.roboto-slab-400 {
+  font-family: "Roboto Slab", serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+}
+
+::-webkit-scrollbar {
+  width: 3px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: #000;
+}
+::-webkit-scrollbar-thumb {
+  background: #555;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #0060fe;
+}
+.new-scroll-track::-webkit-scrollbar {
+  width: 2px;
+}
+
+.new-scroll-track::-webkit-scrollbar-track {
+  background: transparent;
+}
+.new-scroll-track::-webkit-scrollbar-thumb {
+  background: transparent;
+}
+
+.new-scroll-track::-webkit-scrollbar-thumb:hover {
+  background: transparent;
+}
+
+.sidebar {
+  transition: width 0.2s ease-out;
+}
+
+.expanded {
+  width: 200px; /* or your preferred expanded width */
+}
+
+.collapsed {
+  width: 60px; /* or your preferred collapsed width */
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.fadeIn {
+  animation: fadeIn 1.5s ease-out;
+}
