@@ -8,6 +8,7 @@ import ServerDetails from "./ServerDetails";
 import BuildConfiguration from "./BuildConfiguration";
 import Startup from "./Startup";
 import Database from "./Database";
+import Manage from "./Manage";
 
 const ServerEdit = () => {
   const id = useParams().id;
@@ -93,6 +94,15 @@ const ServerEdit = () => {
           <TabsContent value="database">
             <div className="w-full">
               <Database
+                serverDetails={serverDetails}
+                serverDBdata={serverDBdata}
+                getServerDetails={getServerDetails}
+              />
+            </div>
+          </TabsContent>
+          <TabsContent value="manage">
+            <div className="w-full">
+              <Manage
                 serverDetails={serverDetails}
                 serverDBdata={serverDBdata}
                 getServerDetails={getServerDetails}
