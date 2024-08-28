@@ -386,25 +386,27 @@ const RightPart = ({
       })
       }
       
-   
-
-      //delete the allocations
-      selectedDeletedAllocation.forEach(async(allocation : any) => {
-        // console.log(allocation)
-              await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/client/server/allocation/${serverDetails.identifier}/${allocation.attributes.id}`, {
-         withCredentials: true
+   console.log(selectedDeletedAllocation)
+      if(selectedDeletedAllocation && selectedDeletedAllocation?.length > 0){
+        selectedDeletedAllocation.forEach(async(allocation : any) => {
+          // console.log(allocation)
+                await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/client/server/allocation/${serverDetails.identifier}/${allocation.attributes.id}`, {
+           withCredentials: true
+          })
+        });
+  
+        toast.success('Allocations deleted successfully!', { 
+          position: "bottom-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
         })
-      });
-
-      toast.success('Allocations deleted successfully!', { 
-        position: "bottom-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      })
+      }
+      //delete the allocations
+      
       
       await getServerDetails()
 

@@ -1,19 +1,13 @@
-FROM node:22.6.0 AS installer
-
+FROM node:22.6.0 AS build
 WORKDIR /app
-
 COPY package.json .
 RUN npm install
-
 COPY . .
 
 RUN npm run build
 
-FROM nginx:alpine AS production-stage
-
-COPY --from=installer /app/dist /usr/share/nginx/html
-
+FROM nginx:alpine
+COPY --from=build /app/dist /usr/share/nginx/html
 EXPOSE 80
 
 CMD ["nginx", "-g", "daemon off;"]
-

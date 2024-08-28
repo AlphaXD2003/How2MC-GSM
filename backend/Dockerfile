@@ -1,4 +1,4 @@
-FROM node:22.6.0
+FROM node:22.6.0-alpine
 
 WORKDIR /server
 
@@ -8,5 +8,4 @@ RUN npm install
 COPY . .
 
 EXPOSE 5000
-
-CMD ["npm","run" ,"start"]
+CMD ["node", "."]

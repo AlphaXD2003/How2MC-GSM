@@ -1,49 +1,39 @@
-
+version: '3.8'
 
 services:
+  mongo:
+    image: mongo
+    container_name: mongo
+    ports:
+      - "27018:27017"
+    volumes:
+      - mongo-test-data:/data/db
+
   backend:
-    build: 
+    build:
       context: ./backend
       dockerfile: Dockerfile
+    container_name: backend
     ports:
-      - '5000:5000'
-      
-    volumes:
-      - ./backend:/server
+      - "5000:5000"
     environment:
-      - MONGODB_URI=mongodb://mongo:27017
+      - MONGODB_URI=mongodb://mongo:27017   
     depends_on:
       - mongo
-    networks:
-      - my-ptero-client  
-  
+
   frontend:
     build:
       context: ./frontend/client
       dockerfile: Dockerfile
+    container_name: frontend
     ports:
-      - '5173:5173'
-      - '80:80'
-    volumes:
-      - ./frontend/client:/app
+      - "3000:3000"
+      - "5173:5173"
+      - "80:80"
     environment:
-      - VITE_BACKEND_URL=https://backend:5000
+      - VITE_BACKEND_URL=http://localhost:5000
     depends_on:
-      - backend
-    networks:
-      - my-ptero-client  
+      - backend 
   
-  mongo:
-    image: mongo:latest
-    ports:
-      - '27017:27017'
-    volumes:
-      - mongo-data:/data/db
-    networks:
-      - my-ptero-client  
-
 volumes:
-  mongo-data:
-
-networks:
-  my-ptero-client:
+  mongo-test-data:
