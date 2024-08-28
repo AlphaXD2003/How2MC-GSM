@@ -7,6 +7,7 @@ import { Audio } from "react-loader-spinner";
 import ServerDetails from "./ServerDetails";
 import BuildConfiguration from "./BuildConfiguration";
 import Startup from "./Startup";
+import Database from "./Database";
 
 const ServerEdit = () => {
   const id = useParams().id;
@@ -37,8 +38,8 @@ const ServerEdit = () => {
       setServerDetails(null);
     };
   }, []);
-  if(!serverDBdata || !serverDetails){
-    return <Audio />
+  if (!serverDBdata || !serverDetails) {
+    return <Audio />;
   }
   return (
     <div className="flex flex-row items-center justify-between w-full   ">
@@ -54,41 +55,48 @@ const ServerEdit = () => {
             <TabsTrigger value="build">Build Configuration</TabsTrigger>
             <TabsTrigger value="startup">Startup Configuration</TabsTrigger>
             <TabsTrigger value="database">Database</TabsTrigger>
-            <TabsTrigger value="mounts">Mounts</TabsTrigger>
             <TabsTrigger value="manage">Manage</TabsTrigger>
           </TabsList>
           <TabsContent value="about">
             <AboutServer
-                serverDetails={serverDetails}
-                serverDBdata={serverDBdata}
+              serverDetails={serverDetails}
+              serverDBdata={serverDBdata}
             />
           </TabsContent>
           <TabsContent value="details">
             <ServerDetails
-                serverDetails={serverDetails}
-                serverDBdata={serverDBdata}
-                getServerDetails={getServerDetails}
+              serverDetails={serverDetails}
+              serverDBdata={serverDBdata}
+              getServerDetails={getServerDetails}
             />
           </TabsContent>
           <TabsContent value="build">
             <div className="w-full">
-            <BuildConfiguration
-              
-              serverDetails={serverDetails}
-              serverDBdata={serverDBdata}
-              setServerDetails={setServerDetails}
-              setServerDBdata={setServerDBdata}
-              getServerDetails={getServerDetails}
-          />
+              <BuildConfiguration
+                serverDetails={serverDetails}
+                serverDBdata={serverDBdata}
+                setServerDetails={setServerDetails}
+                setServerDBdata={setServerDBdata}
+                getServerDetails={getServerDetails}
+              />
             </div>
           </TabsContent>
           <TabsContent value="startup">
             <div className="w-full">
-            <Startup
-              serverDetails={serverDetails}
-              serverDBdata={serverDBdata}
-              getServerDetails={getServerDetails}
-            />
+              <Startup
+                serverDetails={serverDetails}
+                serverDBdata={serverDBdata}
+                getServerDetails={getServerDetails}
+              />
+            </div>
+          </TabsContent>
+          <TabsContent value="database">
+            <div className="w-full">
+              <Database
+                serverDetails={serverDetails}
+                serverDBdata={serverDBdata}
+                getServerDetails={getServerDetails}
+              />
             </div>
           </TabsContent>
         </Tabs>

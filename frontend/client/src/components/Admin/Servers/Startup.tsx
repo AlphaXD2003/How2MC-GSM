@@ -474,8 +474,7 @@ const Startup = ({
   serverDBdata: any;
   getServerDetails: any;
 }) => {
-  //   //console.log(serverDetails);
-  //   //console.log(serverDBdata);
+
 
   return (
     <div className="gap-4 mt-2 w-full">

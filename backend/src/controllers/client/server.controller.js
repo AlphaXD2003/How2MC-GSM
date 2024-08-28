@@ -41,7 +41,6 @@ const serverDetails = async (req, res) => {
 
 const webSocketDetails = async (req, res) => {
   const { id } = req.params;
- 
 
   try {
     const pteroRes = await axios.get(`${apiURL}/${id}/websocket`, {
@@ -197,12 +196,12 @@ const createServerDatabases = async (req, res) => {
         headers,
       }
     );
-    res
+    return res
       .status(200)
       .json(new ApiResponse(200, pteroRes.data, "Database created"));
   } catch (error) {
-    console.error(error);
-    //console.log(error.response.data);
+    // console.error(error);
+    console.log(error.response.data);
     res
       .status(error.statusCode || 500)
       .json(
@@ -220,7 +219,7 @@ const rotateServerDatabasePassword = async (req, res) => {
   try {
     const pteroRes = await axios.post(
       `${apiURL}/${id}/databases/${database_id}/rotate-password`,
-{},
+      {},
       {
         headers,
       }
@@ -328,13 +327,12 @@ const updateServerVariables = async (req, res) => {
 
 const renameServer = async (req, res) => {
   const { id } = req.params;
-  const { name, description,aid } = req.body;
-  
+  const { name, description, aid } = req.body;
+
   try {
     const pteroRes = await axios.post(
       `${apiURL}/${id}/settings/rename`,
       {
-        
         name,
         description,
       },
@@ -343,12 +341,12 @@ const renameServer = async (req, res) => {
       }
     );
     await Server.updateOne(
-      {"server_id" : aid},
+      { server_id: aid },
       {
         server_name: name,
         server_description: description,
       }
-    )
+    );
     res.status(200).json(new ApiResponse(200, pteroRes.data, "Server renamed"));
   } catch (error) {
     console.error(error);
@@ -368,7 +366,8 @@ const reinstallServer = async (req, res) => {
   const { id } = req.params;
   try {
     await axios.post(
-      `${apiURL}/${id}/settings/reinstall`,{},
+      `${apiURL}/${id}/settings/reinstall`,
+      {},
 
       {
         headers,
@@ -423,9 +422,9 @@ const createBackup = async (req, res) => {
     const backUpRes = await axios.post(
       `${apiURL}/${id}/backups`,
       {
-        name : req.body.name,
-        ignored_files : req.body.ignored_files,
-        locked : req.body.locked,
+        name: req.body.name,
+        ignored_files: req.body.ignored_files,
+        locked: req.body.locked,
       },
       {
         headers,
@@ -784,14 +783,10 @@ const setPrimaryAllocation = async (req, res) => {
         headers,
       }
     );
-    res
-      .status(200)
-      .json(
-        new ApiResponse(200, true, "Primary allocation set")
-      );
+    res.status(200).json(new ApiResponse(200, true, "Primary allocation set"));
   } catch (error) {
     console.error(error.data.errors);
-    
+
     res
       .status(error.statusCode || 500)
       .json(
@@ -1100,7 +1095,7 @@ const listFiles = async (req, res) => {
 
 const getContentsOfFile = async (req, res) => {
   const { id } = req.params;
-  const {file} = req.body
+  const { file } = req.body;
   //console.log(file);
   try {
     const pteroRes = await axios.get(
@@ -1112,9 +1107,7 @@ const getContentsOfFile = async (req, res) => {
     );
     res
       .status(200)
-      .json(
-        new ApiResponse(200, pteroRes.data, "File contents fetched")
-      );
+      .json(new ApiResponse(200, pteroRes.data, "File contents fetched"));
   } catch (error) {
     // console.error(error);
     //console.log(error.response.data);
@@ -1133,7 +1126,7 @@ const getContentsOfFile = async (req, res) => {
 const downloadFile = async (req, res) => {
   const { id } = req.params;
   const { file } = req.body;
-  //console.log(file);  
+  //console.log(file);
   try {
     const pteroRes = await axios.get(
       `${apiURL}/${id}/files/download?file=${file}`,
@@ -1160,14 +1153,14 @@ const downloadFile = async (req, res) => {
 };
 
 const moveFiles = async (req, res) => {
-  const { id, } = req.params;
+  const { id } = req.params;
   const { root = `/`, files = [] } = req.body;
   try {
     const pteroRes = await axios.put(
       `${apiURL}/${id}/files/rename`,
       {
         root,
-        files
+        files,
       },
       {
         headers,
@@ -1189,7 +1182,7 @@ const moveFiles = async (req, res) => {
   }
 };
 const renameFile = async (req, res) => {
-  const { id, } = req.params;
+  const { id } = req.params;
   const { root = `/`, from, to } = req.body;
   try {
     const pteroRes = await axios.put(
@@ -1256,14 +1249,14 @@ const writeFile = async (req, res) => {
   const { file, content } = req.body;
   //console.log(file);
   //console.log(content);
-  let acctualContent =  content.replace(/^"(.*)"$/, '$1');
+  let acctualContent = content.replace(/^"(.*)"$/, "$1");
 
   try {
     await axios.post(
       `${apiURL}/${id}/files/write?file=${encodeURIComponent(file)}`,
       acctualContent,
       {
-        headers:{
+        headers: {
           ...headers,
           "Content-Type": "text/plain",
         },
@@ -1351,7 +1344,7 @@ const decompressFile = async (req, res) => {
 
 const deleteFile = async (req, res) => {
   const { id } = req.params;
-  const { files = [] , root } = req.body;
+  const { files = [], root } = req.body;
   //console.log(files);
   //console.log(root);
   try {
@@ -1486,5 +1479,5 @@ module.exports = {
   deleteFile,
   createFolder,
   uploadFile,
-  moveFiles
+  moveFiles,
 };
