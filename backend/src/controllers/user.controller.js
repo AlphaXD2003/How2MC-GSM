@@ -1,8 +1,8 @@
 const { ApiErrors } = require("../utils/ApiErrors");
 const { ApiResponse } = require("../utils/ApiResponse");
 const User = require("../models/user.model");
-const https = require('https');
-const fs = require('fs');
+const https = require("https");
+const fs = require("fs");
 const { PTEORDACTYL_URL, PTEORDACTYL_KEY } = process.env;
 const {
   createPteroUser,
@@ -21,7 +21,7 @@ const options = {
   httpOnly: true,
   secure: true,
   sameSite: "None",
-  maxAge:  10 * 24 * 60 * 60 * 1000 // 10 days
+  maxAge: 10 * 24 * 60 * 60 * 1000, // 10 days
 };
 
 const registerUser = async (req, res) => {
@@ -61,7 +61,6 @@ const registerUser = async (req, res) => {
       username
     );
     if (pteroerror) {
-      
       throw new ApiErrors(500, "Pterodactyl user not created");
     }
 
@@ -92,18 +91,22 @@ const registerUser = async (req, res) => {
     );
 
     // make a post req to /api/v1/mail
-    const mailResponse = await axios.post("https://localhost:5000/api/v1/mail", {
-      to: email,
-      subject: "Welcome to How2MC GSM",
-      body: registerMailTemplate,
-    },{
-      httpAgent: new https.Agent({
-        rejectUnauthorized: false,
-      }),
-    });
+    const mailResponse = await axios.post(
+      "https://localhost:5000/api/v1/mail",
+      {
+        to: email,
+        subject: "Welcome to How2MC GSM",
+        body: registerMailTemplate,
+      },
+      {
+        httpAgent: new https.Agent({
+          rejectUnauthorized: false,
+        }),
+      }
+    );
 
-      //console.log(mailResponse.data.success);
-   const simplifiedMailResponse = mailResponse.data
+    //console.log(mailResponse.data.success);
+    const simplifiedMailResponse = mailResponse.data;
     return res
       .status(201)
       .json(
@@ -174,6 +177,7 @@ const loginUser = async (req, res) => {
       .status(200)
       .cookie("accessToken", accessToken, options)
       .cookie("refreshToken", refreshToken, options)
+      .setHeader("Access-Control-Allow-Credentials", true)
       .json(
         new ApiResponse(
           200,
@@ -258,21 +262,23 @@ const refreshAccessToken = async (req, res) => {
 };
 
 const getUser = async (req, res) => {
-  const {accessToken} = req.cookies;
+  const { accessToken } = req.cookies;
   try {
     if (!accessToken) {
       throw new ApiErrors(400, "Access token not found");
     }
-    const decodedToken = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
-    const user = await User.findById(decodedToken._id).select("-password -refreshToken");
+    const decodedToken = jwt.verify(
+      accessToken,
+      process.env.ACCESS_TOKEN_SECRET
+    );
+    const user = await User.findById(decodedToken._id).select(
+      "-password -refreshToken"
+    );
     if (!user) {
       throw new ApiErrors(404, "User not found for the token");
     }
     //console.log(user);
-    return res
-      .status(200)
-      .json(new ApiResponse(200, user, "User found"));
-  
+    return res.status(200).json(new ApiResponse(200, user, "User found"));
   } catch (error) {
     return res
       .status(error.statusCode || 500)
@@ -280,7 +286,7 @@ const getUser = async (req, res) => {
         new ApiResponse(error.statusCode, error.data, error.message, error)
       );
   }
-}
+};
 
 const getPteroUser = async (req, res) => {
   try {
@@ -345,30 +351,24 @@ const createServer = async (req, res) => {
 };
 
 const getLimits = async (req, res) => {
-
   const userId = req.user.pteroId;
   try {
     const matchedUser = await Server.find({
-      $and:[
-        {user_id: userId},
-        {"serverInfo.status" : "free"}
-      ]
-    }) 
-    let limits =[]
-    matchedUser.map(server => {
-      limits.push(
-        {
-          cpu:server.serverInfo.cpu,
-          ram:server.serverInfo.ram,
-          disk:server.serverInfo.disk,
-          backup:server.serverInfo.backups,
-          database:server.serverInfo.databases,
-          ports:server.serverInfo.ports
-        }
-      )
-    })
+      $and: [{ user_id: userId }, { "serverInfo.status": "free" }],
+    });
+    let limits = [];
+    matchedUser.map((server) => {
+      limits.push({
+        cpu: server.serverInfo.cpu,
+        ram: server.serverInfo.ram,
+        disk: server.serverInfo.disk,
+        backup: server.serverInfo.backups,
+        database: server.serverInfo.databases,
+        ports: server.serverInfo.ports,
+      });
+    });
     //console.log(limits)
-    
+
     return res
       .status(200)
       .json(new ApiResponse(200, limits, "Pterodactyl server limits matched"));
@@ -380,16 +380,19 @@ const getLimits = async (req, res) => {
         new ApiResponse(error.statusCode, error.data, error.message, error)
       );
   }
-}
+};
 
 const reloadJWT = async (req, res) => {
   try {
     const refreshToken = req.cookies?.refreshToken;
-    //console.log('TOken',refreshToken); 
+    //console.log('TOken',refreshToken);
     if (!refreshToken) {
       throw new ApiErrors(400, "Refresh token not found");
     }
-    const decodedToken = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+    const decodedToken = jwt.verify(
+      refreshToken,
+      process.env.REFRESH_TOKEN_SECRET
+    );
     const user = await User.findById(decodedToken._id);
     if (!user) {
       throw new ApiErrors(404, "User not found for the token");
@@ -406,7 +409,6 @@ const reloadJWT = async (req, res) => {
           "Access token refreshed successfully"
         )
       );
-
   } catch (error) {
     console.error(error);
     return res
@@ -415,7 +417,7 @@ const reloadJWT = async (req, res) => {
         new ApiResponse(error.statusCode, error.data, error.message, error)
       );
   }
-}
+};
 
 const getAllUsers = async (req, res) => {
   try {
@@ -430,20 +432,18 @@ const getAllUsers = async (req, res) => {
         new ApiResponse(error.statusCode, error.data, error.message, error)
       );
   }
-}
+};
 
 const getUserInformationById = async (req, res) => {
   try {
     // //console.log(req.params.id);
-    const user = await User.findById(req.params.id).select("-password -refreshToken");
+    const user = await User.findById(req.params.id).select(
+      "-password -refreshToken"
+    );
     if (!user) {
       throw new ApiErrors(404, "User not found");
     }
-    return res
-      .status(200)
-      .json(new ApiResponse(200, user, "User found"));
- 
-
+    return res.status(200).json(new ApiResponse(200, user, "User found"));
   } catch (error) {
     return res
       .status(error.statusCode || 500)
@@ -451,16 +451,25 @@ const getUserInformationById = async (req, res) => {
         new ApiResponse(error.statusCode, error.data, error.message, error)
       );
   }
-}
+};
 
 const updateUser = async (req, res) => {
   try {
-    const {user_id, firstName, lastName, email, username, password,
-      isAdmin, coins, pteroId, avatar, role, IP,
-
-
+    const {
+      user_id,
+      firstName,
+      lastName,
+      email,
+      username,
+      password,
+      isAdmin,
+      coins,
+      pteroId,
+      avatar,
+      role,
+      IP,
     } = req.body;
-    if(!user_id){
+    if (!user_id) {
       throw new ApiErrors(400, "User id not found");
     }
     const user = await User.findById(user_id);
@@ -500,15 +509,15 @@ const updateUser = async (req, res) => {
       user.IP = IP;
     }
 
-    if(user.username || user.email || user.firstName || user.lastName){
+    if (user.username || user.email || user.firstName || user.lastName) {
       const body = {
-        "email": user.email,
-        "username": user.username,
-        "first_name": user.firstName,
-        "last_name": user.lastName,
-      }
+        email: user.email,
+        username: user.username,
+        first_name: user.firstName,
+        last_name: user.lastName,
+      };
       const apiURL = `${PTEORDACTYL_URL}/api/application`;
-      
+
       const pteroRes = await axios.patch(`${apiURL}/users/${pteroId}`, body, {
         headers: {
           Authorization: `Bearer ${PTEORDACTYL_KEY}`,
@@ -516,12 +525,10 @@ const updateUser = async (req, res) => {
           Accept: "application/json",
         },
       });
-      
     }
 
     await user.save({
       validateBeforeSave: true,
-
     });
     return res
       .status(200)
@@ -535,21 +542,20 @@ const updateUser = async (req, res) => {
         new ApiResponse(error.statusCode, error.data, error.message, error)
       );
   }
-}
+};
 
 const updateTheImage = async (req, res) => {
   try {
-    const {user_id} = req.body;
+    const { user_id } = req.body;
     const user = await User.findById(user_id);
     if (!user) {
       throw new ApiErrors(404, "User not found");
     }
     //console.log(req.file);
-    const {path} = req.file;
+    const { path } = req.file;
     //console.log(path);
     const url = await uploadCloudinary(path);
     //console.log(url);
-    
 
     user.avatar = url;
     await user.save({
@@ -571,7 +577,7 @@ const updateTheImage = async (req, res) => {
         )
       );
   }
-}
+};
 
 module.exports = {
   updateTheImage,
@@ -586,5 +592,5 @@ module.exports = {
   createServer,
   getUser,
   getLimits,
-  updateUser
+  updateUser,
 };

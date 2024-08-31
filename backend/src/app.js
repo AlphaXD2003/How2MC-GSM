@@ -90,6 +90,7 @@ app.use('/api/v1/payment/stripe', stripeRouter)
 // HTTPS server configuration
 const privateKey = fs.readFileSync("localhost-key.pem", "utf8");
 const certificate = fs.readFileSync("localhost.pem", "utf8");
+
 const credentials = { key: privateKey, cert: certificate };
 
 // Create HTTPS server

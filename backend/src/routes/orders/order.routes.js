@@ -9,10 +9,11 @@ const {
   cancelOrder,
   updateOrder,
   pauseSubscription,
-  resumeSubscription
+  resumeSubscription,
+  getAllOrders
 } = require("../../controllers/orders/order.controller");
 
-
+router.route("/").get(getAllOrders)
 router.route("/create").post(createOrder);
 router.route("/getOrdersByUserId").post(getOrdersByUserId);
 router.route("/getOrderById").post(getOrderById);

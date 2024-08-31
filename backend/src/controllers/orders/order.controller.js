@@ -6,6 +6,7 @@ const User = require("../../models/user.model");
 const {ApiResponse} = require("../../utils/ApiResponse");
 const {ApiErrors} = require("../../utils/ApiErrors");
 
+
 const createOrder = async (req, res) => {
   const { price, productId, eggId, serverId,order_id } = req.body;
   const user = await User.findById(req.user.id);
@@ -202,7 +203,25 @@ const resumeSubscription = async (req, res) => {
   }
 };
 
+const getAllOrders = async (req, res) =>{
+  try {
+    const orders = await Order.find()
+    return res
+      .status(201)
+      .json(
+        new ApiResponse(201, orders, 'All Errors found')
+      )
+  } catch (error) {
+    return res
+    .status(error.statusCode || 401)
+    .json(
+      new ApiResponse(error.statusCode ||401 , [], 'Error while getting all the data')
+    )
+  }
+}
+
 module.exports = {
+  getAllOrders,
   createOrder,
   getOrdersByUserId,
   getOrderById,

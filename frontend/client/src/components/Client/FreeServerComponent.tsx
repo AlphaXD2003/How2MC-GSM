@@ -1,15 +1,13 @@
 import {
   Table,
   TableBody,
-
   TableCell,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
 import axios from "axios";
-import {  useEffect,  useState } from "react";
-
+import { useEffect, useState } from "react";
 
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
 
@@ -17,7 +15,6 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import SuccessToastConatiner from "../toaster/SuccessToastConatiner";
@@ -28,7 +25,6 @@ import { useNavigate } from "react-router-dom";
 import { setLimits } from "@/slice/serverSlice";
 import { useUserLimits } from "@/custom functions/getUserLimits";
 import { useDispatch } from "react-redux";
-
 
 const FreeServerComponent = () => {
   const [freeServers, setFreeServers] = useState<any>([]);
@@ -43,9 +39,7 @@ const FreeServerComponent = () => {
         }
       );
       setFreeServers(response.data.data);
-     
     } catch (error) {
-     
       setError(error);
     }
   };
@@ -103,8 +97,7 @@ function Example({
   server_id: any;
   setFetchAgain: any;
 }) {
-    
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const handleDeleteServer = async () => {
     try {
       const response = await axios.delete(
@@ -113,32 +106,29 @@ function Example({
           withCredentials: true,
         }
       );
-      
-    if (response.data.data === true) {
-      toast.success(' Server Deleted Successfully', {
-        position: "bottom-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-        transition: Bounce,
-        });
-      setFetchAgain((prev : boolean) => !prev);
-      const [userLimits, error] = await useUserLimits() ;
-      if(userLimits && !error){
-     
-        dispatch(setLimits(userLimits))
-      }
-    } else {
-      alert("Server Deleted Failed");
-    }
 
-     
+      if (response.data.data === true) {
+        toast.success(" Server Deleted Successfully", {
+          position: "bottom-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+          transition: Bounce,
+        });
+        setFetchAgain((prev: boolean) => !prev);
+        const [userLimits, error] = await useUserLimits();
+        if (userLimits && !error) {
+          dispatch(setLimits(userLimits));
+        }
+      } else {
+        alert("Server Deleted Failed");
+      }
     } catch (error) {
-      toast.error(' Server Deletion Failed', {
+      toast.error(" Server Deletion Failed", {
         position: "bottom-right",
         autoClose: 5000,
         hideProgressBar: false,
@@ -148,34 +138,51 @@ function Example({
         progress: undefined,
         theme: "dark",
         transition: Bounce,
-        });
+      });
     }
-    
   };
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const openServer = () => {
-    navigate(`/server/${server_id}`)
-  }
+    navigate(`/server/${server_id}`);
+  };
   const editServer = () => {
-    navigate(`/dashboard/edit-server/${server_id}`)
-  }
+    navigate(`/dashboard/edit-server/${server_id}`);
+  };
 
   return (
     <div className="flex">
       <div className="ml-auto">
-      <DropdownMenu >
-      <DropdownMenuTrigger className="flex flex-row gap-2">
-        <div>Methods</div>
-        <ChevronDownIcon className="w-5" />
-      </DropdownMenuTrigger>
-      <DropdownMenuContent>
-        <DropdownMenuItem onClick={openServer} className="flex flex-row gap-2"> <IconLockOpen className="w-5" /> Open</DropdownMenuItem>
-        <DropdownMenuItem onClick={editServer} className="flex flex-row gap-2"> <Edit2 className="w-4" /> Edit</DropdownMenuItem>
-        <DropdownMenuItem className="flex flex-row gap-2" onClick={handleDeleteServer}> <Trash2 className="w-4" /> Delete</DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+        <DropdownMenu>
+          <DropdownMenuTrigger className="flex flex-row gap-2">
+            <div>Methods</div>
+            <ChevronDownIcon className="w-5" />
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <DropdownMenuItem
+              onClick={openServer}
+              className="flex flex-row gap-2"
+            >
+              {" "}
+              <IconLockOpen className="w-5" /> Open
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={editServer}
+              className="flex flex-row gap-2"
+            >
+              {" "}
+              <Edit2 className="w-4" /> Edit
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              className="flex flex-row gap-2"
+              onClick={handleDeleteServer}
+            >
+              {" "}
+              <Trash2 className="w-4" /> Delete
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
     </div>
   );
