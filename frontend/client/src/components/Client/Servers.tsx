@@ -34,22 +34,22 @@ const Servers = () => {
   const [servers, setServers] = React.useState([]);
 
   const getUsersServer = async () => {
-    const key = fs.readFileSync(
-      `/home/subhamoy/Coding/Projects/How2MC-GSM/backend/localhost-key.pem`
-    );
-    const cert = fs.readFileSync(
-      `/home/subhamoy/Coding/Projects/How2MC-GSM/backend/localhost.pem`
-    );
+    // const key = fs.readFileSync(
+    //   `/home/subhamoy/Coding/Projects/How2MC-GSM/backend/localhost-key.pem`
+    // );
+    // const cert = fs.readFileSync(
+    //   `/home/subhamoy/Coding/Projects/How2MC-GSM/backend/localhost.pem`
+    // );
 
-    const httpsAgent = new https.Agent({
-      cert,
-      key,
-    });
+    // const httpsAgent = new https.Agent({
+    //   cert,
+    //   key,
+    // });
     const response = await axios.get(
       `${import.meta.env.VITE_BACKEND_URL}/servers/user/servers`,
       {
         withCredentials: true,
-        httpsAgent,
+        // httpsAgent,
       }
     );
     //console.log(response.data.data)
